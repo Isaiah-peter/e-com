@@ -10,8 +10,11 @@ app.config["secret_key"] = "qwertyuiopasdfghjkl"
 db = SQLAlchemy()
 db.init_app(app)
 bcrypt = Bcrypt(app)
+
 migrage = Migrate()
 
 migrage.init_app(app, db)
+from shop.admin.routes import auth
+app.register_blueprint(auth)
 
 from shop.admin import routes
