@@ -1,0 +1,8 @@
+.sidebar {
+    background-color: #4387c6;
+    border-radius: 1.1rem;
+    margin: 25px;
+    height: calc(100vh - 50px);
+    color: #fff;
+    width: 16.25rem;
+}

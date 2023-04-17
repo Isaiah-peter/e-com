@@ -1,0 +1,14 @@
+.container-xxl {
+    max-width: 1560px;
+}
+
+.avatar.lg {
+    width: 56px;
+    min-width: 56px;
+    height: 56px;
+    min-height: 56px;
+}
+
+.me-2 {
+    margin-right: 10px;
+}
