@@ -2,6 +2,8 @@ from shop import db, app
 from flask import make_response, request, jsonify
 from shop.admin.models import User
 from shop.products.models import Category, Product, Size, Color
+import cloudinary
+import cloudinary.uploader
 
 
 @app.route('/category', methods=['GET', 'POST'])
@@ -36,7 +38,6 @@ def product_create():
 
         if request.is_json:
             data = request.get_json()
-            print(data)
             product = Product(name=data.get('name'), desc=data.get('desc'),
                               price=data.get('price'),
                               in_stock=data.get('in_stock'),
@@ -90,7 +91,6 @@ def products_lists():
     else:
         auth_token = auth_header.split(' ')[1]
     user = User.decode_auth_token(auth_token)
-    print(user)
     category = request.args.get('category')
     size = request.args.get('size')
     color = request.args.get('color')
@@ -122,3 +122,35 @@ def products_lists():
         return make_response(jsonify(products)), 200
     else:
         return {'error': "token expired or invalid"}, 400
+    
+
+@app.route('/product/<id>', methods=['GET', 'DELETE'])
+def getProductById(id):
+    auth_header = request.headers.get("Authorization")
+    if auth_header is None:
+        return {"error": "no token"}, 400
+    else:
+        auth_token = auth_header.split(' ')[1]
+    user = User.decode_auth_token(auth_token)
+    if type(user) == dict and user.get('user_id'):
+        if request.method == 'GET':
+            product = Product.getProductById(db, id)
+            if len(product.get("Product")) == 0:
+                return {"error": "no product"}, 400
+            return make_response(jsonify(product)), 200
+        elif request.method == 'DELETE':
+            Product.deleteProduct(db, id)
+            return make_response(jsonify({"msg": "Product deleted", "id": id}), 200)
+            
+    else:
+        return make_response(jsonify({"error": "error getting product"})), 400
+    
+
+@app.route('/upload', methods=['POST'])
+def upload():
+    file_to_upload = request.files['imageurl']
+    app.logger.info('%s file_to_upload', file_to_upload)
+    upload_image = cloudinary.uploader.upload(file_to_upload)
+    print(upload_image)
+
+    return jsonify(upload_image), 200

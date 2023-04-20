@@ -33,6 +33,7 @@ class Product(db.Model, BaseModel):
             'longname': self.longname,
             'description': self.desc,
             'created_at': self.created_at,
+            'seller_id': self.seller_id,
         }
 
     @staticmethod
@@ -49,6 +50,11 @@ class Product(db.Model, BaseModel):
                                   size=[i.serializable for i in p.sizes])
                              for p in products])
     
+    def deleteProduct(db, id):
+        product = db.session.query(Product).get(id)
+        db.session.delete(product)
+        db.session.commit()
+    
 
     def getProductById(db, id):
         products = db.session.query(Product).join(Product.colors).join(
@@ -56,6 +62,8 @@ class Product(db.Model, BaseModel):
             db.contains_eager(Product.categories),
             db.contains_eager(
                 Product.colors),db.contains_eager(Product.sizes)).filter(Product.id == id).all()
+        
+        print(products)
         return dict(Product=[dict(p.serializable,
                                   color=[i.serializable for i in p.colors],
                                   category=[

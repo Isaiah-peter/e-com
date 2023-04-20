@@ -4,7 +4,6 @@ from datetime import datetime, timedelta
 import jwt
 
 
-
 class User(db.Model, BaseModel):
     __tablename__ = 'users'
 
@@ -17,6 +16,8 @@ class User(db.Model, BaseModel):
     is_seller = db.Column(db.Boolean, default=False)
     products = db.relationship(
         'Product', backref='user', cascade="all, delete-orphan", lazy=True)
+    addresses = db.relationship('Address', backref='orders',
+                                cascade="all, delete-orphan", lazy=True)
 
     def __init__(self, name, username, password, email, phone, profile=None, is_seller=None) -> None:
         self.name = name
@@ -73,7 +74,7 @@ class User(db.Model, BaseModel):
         if user.is_seller == False:
             return False
         return True
-    
+
     @property
     def serializable(self):
         return {

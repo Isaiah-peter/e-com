@@ -2,8 +2,15 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_migrate import Migrate
+import cloudinary
 
 
+cloudinary.config(
+    cloud_name = "dieusg1qo",
+    api_key = "874512347679454",
+    api_secret = "VRynsM7TUYOjD9tS4NIZvDbKTBM",
+    secure = True
+)
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://postgres:secret@localhost:5432/ecom"
 app.config["secret_key"] = "qwertyuiopasdfghjkl"

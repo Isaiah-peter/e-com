@@ -128,3 +128,7 @@ def user(id):
 
         return make_response(jsonify(res)), 401
     return make_response(jsonify(user.serializable)), 200
+
+@auth.route('/upload', methods=["GET"])
+def upload():
+    pass
