@@ -1,6 +1,6 @@
 from flask import Blueprint, request, make_response, jsonify
 from shop import db, bcrypt
-from .models import User, BlacklistToken
+from .models import User
 
 auth = Blueprint('auth', __name__)
 
@@ -93,8 +93,6 @@ def login():
 @auth.route('/users', methods=['GET'])
 def users():
     auth_header = request.headers.get('Authorization')
-
-
     if auth_header:
         auth_token = auth_header.split(' ')[1]
     else:
@@ -106,13 +104,12 @@ def users():
     
     if auth_token:
         user = User.decode_auth_token(auth_token=auth_token)
+        print(user)
     
-    if user.get('user_id') and user.get('seller'):
+    if type(user) == dict and user.get('user_id') and user.get('seller'):
         all_users = User.query.all()
-        res = {}
-        for i in all_users:
-            res[i.id] = i.to_dict()
-        return make_response(jsonify(res)), 200
+        user_data = dict(Users=[p.serializable for p in all_users])
+        return make_response(jsonify(user_data)), 200
     else:
         responsedata = {
             "error": "you are not authorized" 
@@ -123,18 +120,11 @@ def users():
 @auth.route('/user/<id>', methods=["GET"])
 def user(id): 
     user = db.session.query(User).get_or_404(id)
-    response_data = {
-            "name": user.name,
-            "username": user.username,
-            "email": user.email,
-            "profile": user.profile,
-            "is_seller": user.is_seller,
-            "phone": user.phone
-        }
+
     if user is None:
         res = {
             "error": "user does not exist"
         }
 
         return make_response(jsonify(res)), 401
-    return make_response(jsonify(response_data)), 200
+    return make_response(jsonify(user.serializable)), 200

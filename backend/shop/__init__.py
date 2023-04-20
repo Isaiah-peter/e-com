@@ -18,3 +18,4 @@ from shop.admin.routes import auth
 app.register_blueprint(auth)
 
 from shop.admin import routes
+from shop.products import routes
