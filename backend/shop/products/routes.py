@@ -2,7 +2,6 @@ from shop import db, app
 from flask import make_response, request, jsonify
 from shop.admin.models import User
 from shop.products.models import Category, Product, Size, Color
-import json
 
 
 @app.route('/category', methods=['GET', 'POST'])
@@ -98,11 +97,28 @@ def products_lists():
     new = request.args.get('new')
     if type(user) == dict and user.get('user_id'):
         products = Product.getProduct(db)
-        if new and len(new) != 0:
+
+        if new and category:
+            print ("weldone")
+            products = Product.getNewProductAndRelatedClassesName(db, Category, category)
+        elif category:
+            print("leater")
+            products = Product.getProductByRelatedClassesName(db, Category , category)
+
+        if new and size:
+            products = Product.getNewProductAndRelatedClassesName(db, Size, size)
+        elif size:
+            products = Product.getProductByRelatedClassesName(db, Size , size)
+
+        if new and color:
+            products = Product.getNewProductAndRelatedClassesName(db, Color, color)
+        elif color:
+            products = Product.getProductByRelatedClassesName(db, Color , color)
+            
+        if new:
             products = Product.getNewProduct(db)
-        
-        if category:
-            products = Product.getProductByRelatedClassesName(db, Product.categories, category)
+   
+       
         return make_response(jsonify(products)), 200
     else:
         return {'error': "token expired or invalid"}, 400

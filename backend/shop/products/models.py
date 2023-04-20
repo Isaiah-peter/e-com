@@ -49,7 +49,7 @@ class Product(db.Model, BaseModel):
                                   size=[i.serializable for i in p.sizes])
                              for p in products])
     
-    @staticmethod
+
     def getProductById(db, id):
         products = db.session.query(Product).join(Product.colors).join(
             Product.categories).join(Product.sizes).options(
@@ -88,8 +88,21 @@ class Product(db.Model, BaseModel):
                                       i.serializable for i in p.categories],
                                   size=[i.serializable for i in p.sizes])
                              for p in products])
+    
+    def getNewProductAndRelatedClassesName(db, classes, name):
+        products = db.session.query(Product).join(Product.colors).join(
+            Product.categories).join(Product.sizes).options(
+            db.contains_eager(Product.categories),
+            db.contains_eager(
+                Product.colors),db.contains_eager(Product.sizes)).filter(classes.name == name).order_by(desc(Product.created_at)).all()
+        return dict(Product=[dict(p.serializable,
+                                  color=[i.serializable for i in p.colors],
+                                  category=[
+                                      i.serializable for i in p.categories],
+                                  size=[i.serializable for i in p.sizes])
+                             for p in products])
+    
 
-    @staticmethod
     def create_cartegory(category, db):
         db.session.add(category)
         db.session.commit()
