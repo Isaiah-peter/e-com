@@ -99,10 +99,8 @@ def products_lists():
         products = Product.getProduct(db)
 
         if new and category:
-            print ("weldone")
             products = Product.getNewProductAndRelatedClassesName(db, Category, category)
         elif category:
-            print("leater")
             products = Product.getProductByRelatedClassesName(db, Category , category)
 
         if new and size:

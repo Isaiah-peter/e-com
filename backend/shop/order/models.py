@@ -11,8 +11,38 @@ class Order(db.Model, BaseModel):
                         nullable=False)
     order_qties = db.relationship('OrderQty', backref='orders',
                                   cascade="all, delete-orphan", lazy=True)
-    addresses = db.relationship('Address', backref='orders',
+    addresses = db.relationship('Address', backref='addresses_orders',
                                 cascade="all, delete-orphan", lazy=True)
+    
+    @property
+    def serializable(self):
+        return {
+            "id": self.id,
+            "amount": self.amount,
+            "status": self.status,
+            "created_at": self.created_at
+        }
+    
+    @staticmethod
+    def GetOrders(db):
+        orders = db.session.query(Order).join(Order.addresses).join(Order.order_qties).options(
+            db.contains_eager(Order.addresses),
+            db.contains_eager(Order.order_qties)
+        ).all()
+        print(orders)
+        return dict(Order=[dict(d.serializable,
+                               order_qties=[i.serializable for i in d.order_qties],
+                               addresses=[i.serializable for i in d.addresses])
+                          for d in orders])
+    
+    def GetOrder(db, id):
+        orders = db.session.query(Order).join(Order.addresses).join(Order.order_qties).options(
+            db.contains_eager(Order.addresses),
+            db.contains_eager(Order.order_qties)
+        ).filter(Order.id == id).first()
+        return dict(orders.serializable,
+                               order_qties=[i.serializable for i in orders.order_qties],
+                               addresses=[i.serializable for i in orders.addresses])
 
 
 class OrderQty(db.Model, BaseModel):
@@ -22,6 +52,14 @@ class OrderQty(db.Model, BaseModel):
     cart_id = db.Column(db.Integer, db.ForeignKey('carts.id'), nullable=False)
     order_id = db.Column(db.Integer, db.ForeignKey(
         'orders.id'), nullable=False)
+    
+    @property
+    def serializable(self):
+        return {
+            "id": self.id,
+            "quantity": self.quantity,
+            "created_at": self.created_at
+        }
 
 
 class Address(db.Model, BaseModel):
@@ -30,4 +68,11 @@ class Address(db.Model, BaseModel):
     address = db.Column(db.String(), nullable=False)
     order_id = db.Column(db.Integer, db.ForeignKey(
         'orders.id'), nullable=False)
-    user_id = db.Column(db.Interger, db.ForeignKey('users.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+
+    @property
+    def serializable(self):
+        return {
+            "id": self.id,
+            "address": self.address
+        }

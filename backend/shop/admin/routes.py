@@ -42,7 +42,6 @@ def register():
 def login():
     data = request.get_json()
     try:
-
         user = User.query.filter_by(
             email=data.get('email')
         ).first()
@@ -70,6 +69,7 @@ def login():
             "profile": user.profile,
             "is_seller": user.is_seller,
             "phone": user.phone
+
         }
         print (response_data)
         auth_token = user.encode_auth_token(user.id)
@@ -79,10 +79,11 @@ def login():
                 'status': 'success',
                 'message': 'Successfully logged in.',
                 'auth_token': auth_token,
-                "user": response_data,
+                "user": user.to_dict(),
             }
             return make_response(jsonify(responseObject)), 200
     except Exception as e:
+        print(e)
         responseObject = {
             'status': 'fail',
             'message': 'Try again'

@@ -18,7 +18,7 @@ function App() {
     <Router>
       <Switch>
         <Route exact path="/">
-          <Dashbroad />
+          <Home />
         </Route>
         <Route path="/products/:category">
           <ProductList />
