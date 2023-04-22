@@ -47,7 +47,7 @@ def orders():
         return make_response(jsonify(result)), 200
 
 
-@app.route('/order/<id>', methods=['GET', 'DELETE'])
+@app.route('/order/<id>', methods=['GET', 'DELETE', 'PUT'])
 def order(id):
     auth_header = request.headers.get('Authorization')
     auth_token = auth_header.split(' ')[1]
@@ -66,6 +66,17 @@ def order(id):
         db.session.delete(order)
         db.session.commit()
         return {"msg": "success"}
+        
+    if request.method == 'PUT':
+        order = Order.query.get(id)
+        if order is None:
+            return make_response(jsonify({'error':'order not found'})), 400
+        data = request.get_json()
+        
+        if data.get('quantity'):
+            order.quantity = data.get('quantity')
+        db.session.commit()
+        return make_response(jsonify({'msg':'done'})), 200
     
 @app.route('/addresses', methods=['GET'])
 def address():
@@ -79,3 +90,7 @@ def address():
     address = Address.query.filter(Address.user_id == user.get('user_id')).all()
     res = dict(Address=[dict(a.serializable) for a in address] )
     return make_response(jsonify(res)), 200
+
+
+
+
