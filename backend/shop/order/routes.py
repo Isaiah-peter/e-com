@@ -73,8 +73,8 @@ def order(id):
             return make_response(jsonify({'error':'order not found'})), 400
         data = request.get_json()
         
-        if data.get('quantity'):
-            order.quantity = data.get('quantity')
+        if data.get('status'):
+            order.quantity = data.get('status')
         db.session.commit()
         return make_response(jsonify({'msg':'done'})), 200
     
