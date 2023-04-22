@@ -23,6 +23,8 @@ class Order(db.Model, BaseModel):
             "payment_method": self.payment_method,
             "amount": self.amount,
             "status": self.status,
+            "user_id": self.user_id,
+            "cart_id": self.cart_id,
             "created_at": self.created_at
         }
     
