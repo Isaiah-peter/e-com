@@ -5,17 +5,26 @@ import Product from "../component/Product";
 import NewLetter from "../component/NewLetter";
 import Footer from "../component/Footer";
 import Categories from "../component/Categories";
+import { Link } from "react-router-dom";
+import './style.css'
 
-const Home = () => {
+const Home = ({user}) => {
     return (
-        <div>
+        <div className="position-relative">
             <Announcement />
-            <Navbar />
+            <Navbar user={user} />
             <Slider />
             <Categories />
             <Product />
             <NewLetter />
             <Footer />
+            {user && (
+                <div className="position-fixed bottom-0 end-0 z-3">
+                    <Link to={'/dashboard'} className="p-3 links rounded">
+                        Sellers Page
+                    </Link>
+                </div>
+            )}
         </div>
     )
 }

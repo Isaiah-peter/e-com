@@ -89,8 +89,10 @@ const Register = () => {
   const [check, setCheck] = useState(false)
   const [user, setUser] = useState({
     name: "",
+    username: "",
     email: "",
     password: "",
+    phone: "",
     address: "",
   })
 
@@ -126,7 +128,8 @@ const Register = () => {
           Login
         </Link>
         <Form>
-          <Input placeholder="username" name="name" onChange={(e) => handleChange(e)} />
+          <Input placeholder="username" name="username" onChange={(e) => handleChange(e)} />
+          <Input placeholder="name" name="name" onChange={(e) => handleChange(e)} />
           <Input
             placeholder="password"
             name="password"
@@ -137,7 +140,7 @@ const Register = () => {
             {showPassword ? <RemoveRedEyeOutlined /> : <VisibilityOff />}
           </Icon>
           <Input placeholder="email" type="email" name="email" onChange={(e) => handleChange(e)} />
-          <Input placeholder="adress" type="text" name="address" onChange={(e) => handleChange(e)}/>
+          <Input placeholder="phone" name="phone" onChange={(e) => handleChange(e)} />
           <SellerDiv>
           <div class="form-check">
             <input className="form-check-input" type="checkbox" id="defaultCheck1" onChange={handleCheck}/>

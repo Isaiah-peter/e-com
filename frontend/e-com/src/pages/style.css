@@ -1,0 +1,21 @@
+.links {
+    color: white;
+    background-color: #4387c6;
+}
+
+.links:hover {
+    color: white;
+    text-decoration: none;
+}
+
+.bottom-0 {
+    bottom: 3rem;
+}
+
+.end-0 {
+    right: 1rem;
+}
+
+.z-3 {
+    z-index: 10;
+}

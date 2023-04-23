@@ -8,11 +8,6 @@ const Header = () => {
       <nav class="navbar py-4">
         <div class="container-xxl w-100 d-flex align-item-center justify-content-between">
           <div class="h-right d-flex align-items-center mr-5 mr-lg-0 order-1">
-            <div class="d-flex mx-2 mt-1">
-              <a class="nav-link text-primary collapsed" title="Get Help" href="/template/ebazar/react/help">
-                <i class="icofont-info-square fs-5"></i>
-              </a>
-            </div>
             <div class=" dropdown user-profilem ml-2 ml-sm-3 d-flex align-items-center zindex-popover dropdown">
               <div class="u-info me-2">
                 <p class="mb-0 text-end line-height-sm ">

@@ -9,7 +9,6 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Redirect,
 } from "react-router-dom";
 
 function App() {
@@ -17,9 +16,14 @@ function App() {
   return (
     <Router>
       <Switch>
-        <Route exact path="/">
-          <Home />
+      <Route exact path="/">
+          <Home user={user} />
         </Route>
+
+        <Route exact path="/dashboard">
+          <Dashbroad />
+        </Route>
+
         <Route path="/products/:category">
           <ProductList />
         </Route>

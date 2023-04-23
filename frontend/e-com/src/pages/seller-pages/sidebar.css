@@ -2,7 +2,29 @@
     background-color: #4387c6;
     border-radius: 1.1rem;
     margin: 25px;
-    height: calc(100vh - 50px);
+    height: 400px;
+    max-height: calc(100vh - 50px);
     color: #fff;
-    width: 16.25rem;
+    width: 20.25rem;
+}
+
+.m-link {
+    color: white;
+    padding: 8px 0;
+    font-size: 17px;
+    display: flex;
+    align-items: center;
+}
+
+.m-link span {
+    margin-left: 0.5rem;
+}
+
+.m-link:hover {
+    color: #fff;
+    text-decoration: none;
+}
+
+.sidebar-mini-btn {
+    font-size: 32px;
 }

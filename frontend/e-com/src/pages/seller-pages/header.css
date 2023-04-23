@@ -12,3 +12,36 @@
 .me-2 {
     margin-right: 10px;
 }
+
+.input-group-text {
+    padding: .5rem 1rem;
+    font-size: 1.25rem;
+    border-radius: 0 .3rem 0.3rem 0;
+    color: black;
+}
+
+.h-100vh {
+    height: 100vh;
+    overflow: auto;
+    scroll-behavior: smooth;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    -webkit-overflow-style: none;
+    
+}
+
+::-webkit-scrollbar {
+    width: 0;
+}
+
+.fs-5 {
+    font-size: calc(1.5rem + .6vw);
+    color: #f1f1f1;
+}
+
+.menu-list {
+    list-style: none;
+    overflow: none;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+}
