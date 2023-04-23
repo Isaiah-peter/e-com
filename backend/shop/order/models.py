@@ -6,9 +6,11 @@ class Order(db.Model, BaseModel):
     __tablename__ = 'orders'
 
     amount = db.Column(db.Float, nullable=False)
+    payment_method = db.Column(db.String, nullable=False)
     status = db.Column(db.String, nullable=False, default="pending")
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'),
                         nullable=False)
+    cart_id = db.Column(db.Integer, db.ForeignKey('carts.id'), nullable=False)
     order_qties = db.relationship('OrderQty', backref='orders',
                                   cascade="all, delete-orphan", lazy=True)
     addresses = db.relationship('Address', backref='addresses_orders',
@@ -18,8 +20,11 @@ class Order(db.Model, BaseModel):
     def serializable(self):
         return {
             "id": self.id,
+            "payment_method": self.payment_method,
             "amount": self.amount,
             "status": self.status,
+            "user_id": self.user_id,
+            "cart_id": self.cart_id,
             "created_at": self.created_at
         }
     
