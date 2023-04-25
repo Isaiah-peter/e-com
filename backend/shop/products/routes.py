@@ -99,28 +99,31 @@ def products_lists():
         products = Product.getProduct(db)
 
         if new and category:
-            products = Product.getNewProductAndRelatedClassesName(db, Category, category)
+            products = Product.getNewProductAndRelatedClassesName(
+                db, Category, category)
         elif category:
-            products = Product.getProductByRelatedClassesName(db, Category , category)
+            products = Product.getProductByRelatedClassesName(
+                db, Category, category)
 
         if new and size:
-            products = Product.getNewProductAndRelatedClassesName(db, Size, size)
+            products = Product.getNewProductAndRelatedClassesName(
+                db, Size, size)
         elif size:
-            products = Product.getProductByRelatedClassesName(db, Size , size)
+            products = Product.getProductByRelatedClassesName(db, Size, size)
 
         if new and color:
-            products = Product.getNewProductAndRelatedClassesName(db, Color, color)
+            products = Product.getNewProductAndRelatedClassesName(
+                db, Color, color)
         elif color:
-            products = Product.getProductByRelatedClassesName(db, Color , color)
-            
+            products = Product.getProductByRelatedClassesName(db, Color, color)
+
         if new:
             products = Product.getNewProduct(db)
-   
-       
+
         return make_response(jsonify(products)), 200
     else:
         return {'error': "token expired or invalid"}, 400
-    
+
 
 @app.route('/product/<id>', methods=['GET', 'DELETE'])
 def getProductById(id):
@@ -139,10 +142,10 @@ def getProductById(id):
         elif request.method == 'DELETE':
             Product.deleteProduct(db, id)
             return make_response(jsonify({"msg": "Product deleted", "id": id}), 200)
-            
+
     else:
         return make_response(jsonify({"error": "error getting product"})), 400
-    
+
 
 @app.route('/upload', methods=['POST'])
 def upload():
@@ -152,3 +155,21 @@ def upload():
     print(upload_image)
 
     return jsonify(upload_image), 200
+
+
+@app.route('/product/<seller_id>', methods=['GET'])
+def seller_product(seller_id):
+    auth_header = request.headers.get("Authorization")
+    if auth_header is None:
+        return {"error": "no token"}, 400
+    else:
+        auth_token = auth_header.split(' ')[1]
+    user = User.decode_auth_token(auth_token)
+    if type(user) == dict and user.get('seller_id'):
+        product = Product.getProductBySeller_id(db, seller_id)
+        if len(product.get("Product")) == 0:
+            return {"error": "no product"}, 400
+        return make_response(jsonify(product)), 200
+
+    else:
+        return make_response(jsonify({'error': "expired token"})), 400

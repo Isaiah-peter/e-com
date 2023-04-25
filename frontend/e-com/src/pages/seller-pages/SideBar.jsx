@@ -18,27 +18,27 @@ const SideBar = () => {
             </Link>
           </li>
           <li className=" collapsed">
-            <Link className="m-link " to="/dashboard">
+            <Link className="m-link " to="/dashboard/products">
               <i className="icofont-truck-loaded fs-5"></i>
               <span>Products</span>
             </Link>
           </li>
           <li className=" collapsed">
-            <Link className="m-link" to="/dashboard">
+            <Link className="m-link" to="/dashboard/createproduct">
               <i className="icofont-ui-add fs-5"></i>
               <span>Create Products</span>
             </Link>
           </li>
 
           <li className=" collapsed">
-            <Link className="m-link " to="/dashboard">
+            <Link className="m-link " to="/dashboard/categories">
               <i className="icofont-chart-flow fs-5"></i>
               <span>Category</span>
             </Link>
           </li>
 
           <li className=" collapsed">
-            <Link className="m-link " to="/dashboard">
+            <Link className="m-link " to="/dashboard/orders">
               <i className="icofont-notepad fs-5"></i>
               <span>Order</span>
             </Link>

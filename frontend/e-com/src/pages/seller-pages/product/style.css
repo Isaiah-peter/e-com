@@ -1,0 +1,17 @@
+.product {
+    position: relative;
+    padding: 10px;
+}
+
+.d-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.body {
+    flex-flow: column;
+    display: -ms-flexbox;
+    flex-grow: 1;
+    min-width: 0;
+}

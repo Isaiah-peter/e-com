@@ -10,12 +10,11 @@ class Order(db.Model, BaseModel):
     status = db.Column(db.String, nullable=False, default="pending")
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'),
                         nullable=False)
-    cart_id = db.Column(db.Integer, db.ForeignKey('carts.id'), nullable=False)
     order_qties = db.relationship('OrderQty', backref='orders',
                                   cascade="all, delete-orphan", lazy=True)
     addresses = db.relationship('Address', backref='addresses_orders',
                                 cascade="all, delete-orphan", lazy=True)
-    
+
     @property
     def serializable(self):
         return {
@@ -24,10 +23,9 @@ class Order(db.Model, BaseModel):
             "amount": self.amount,
             "status": self.status,
             "user_id": self.user_id,
-            "cart_id": self.cart_id,
             "created_at": self.created_at
         }
-    
+
     @staticmethod
     def GetOrders(db):
         orders = db.session.query(Order).join(Order.addresses).join(Order.order_qties).options(
@@ -36,28 +34,30 @@ class Order(db.Model, BaseModel):
         ).all()
         print(orders)
         return dict(Order=[dict(d.serializable,
-                               order_qties=[i.serializable for i in d.order_qties],
-                               addresses=[i.serializable for i in d.addresses])
-                          for d in orders])
-    
+                                order_qties=[
+                                    i.serializable for i in d.order_qties],
+                                addresses=[i.serializable for i in d.addresses])
+                           for d in orders])
+
     def GetOrder(db, id):
         orders = db.session.query(Order).join(Order.addresses).join(Order.order_qties).options(
             db.contains_eager(Order.addresses),
             db.contains_eager(Order.order_qties)
         ).filter(Order.id == id).first()
         return dict(orders.serializable,
-                               order_qties=[i.serializable for i in orders.order_qties],
-                               addresses=[i.serializable for i in orders.addresses])
+                    order_qties=[i.serializable for i in orders.order_qties],
+                    addresses=[i.serializable for i in orders.addresses])
 
 
 class OrderQty(db.Model, BaseModel):
     __tablename__ = 'orders_qties'
 
     quantity = db.Column(db.Float, nullable=False)
-    cart_id = db.Column(db.Integer, db.ForeignKey('carts.id'), nullable=False)
+    product_id = db.Column(db.Integer, db.ForeignKey(
+        'products.id'), nullable=False)
     order_id = db.Column(db.Integer, db.ForeignKey(
         'orders.id'), nullable=False)
-    
+
     @property
     def serializable(self):
         return {

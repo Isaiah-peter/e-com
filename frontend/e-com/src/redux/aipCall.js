@@ -1,4 +1,5 @@
 import { loginFailure, loginStart, loginSuccess } from "./userSlice";
+import {addProduct, removeProduct} from "./cartRedux"
 import axios from "axios";
 
 export const login = async (dispatch, user) => {
@@ -10,3 +11,13 @@ export const login = async (dispatch, user) => {
     dispatch(loginFailure());
   }
 };
+
+export const cart = async (dispatch, product) => {
+  
+  try {
+    await axios.post("http://localhost:5000/cart", product)
+  } catch (e) {
+    console.log(e)
+  }
+}
+

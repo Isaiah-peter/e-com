@@ -157,10 +157,11 @@ const Button = styled.button`
 
 const Cart = () => {
   const cart = useSelector((state) => state.cart);
+  const {user} = useSelector((state) => state.user.currentUser);
   const dispatch = useDispatch()
   const config = {
     reference: new Date().getTime().toString(),
-    email: "peterisaiah4fun@gmail.com",
+    email: user.email,
     amount: cart.totalPrice * 100,
     publicKey: KEY,
   };
@@ -201,10 +202,10 @@ const Cart = () => {
               <>
                 <Product>
                   <ProductDetail>
-                    <Image src={p.image_url} />
+                    <Image src={p.url} />
                     <Detail>
                       <ProductName>
-                        <b>Product:</b> {p.title}
+                        <b>Product:</b> {p.name}
                       </ProductName>
                       <ProductColor color={p.color} />
                       <ProductSize>
@@ -239,10 +240,10 @@ const Cart = () => {
               <SummaryItemText>Total</SummaryItemText>
               <SummaryItemPrice>$ {cart.totalPrice}</SummaryItemPrice>
             </SummaryItem>
-            <label htmlFor="">email</label>
-            <input type="text" />
-            <label>address</label>
-            <input type="text" />
+            <div className="w-100 mb-3">
+              <label className="label-form">Address</label>
+              <input type="text" className="form-control" />
+            </div>
             <PaystackConsumer {...componentProps}>
               {({ initializePayment }) => (
                 <Button

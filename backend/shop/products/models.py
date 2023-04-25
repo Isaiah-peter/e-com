@@ -71,6 +71,21 @@ class Product(db.Model, BaseModel):
                                   size=[i.serializable for i in p.sizes])
                              for p in products])
     
+    def getProductBySeller_id(db, seller_id):
+        products = db.session.query(Product).join(Product.colors).join(
+            Product.categories).join(Product.sizes).options(
+            db.contains_eager(Product.categories),
+            db.contains_eager(
+                Product.colors),db.contains_eager(Product.sizes)).filter(Product.seller_id == seller_id).all()
+        
+        print(products)
+        return dict(Product=[dict(p.serializable,
+                                  color=[i.serializable for i in p.colors],
+                                  category=[
+                                      i.serializable for i in p.categories],
+                                  size=[i.serializable for i in p.sizes])
+                             for p in products])
+    
     def getProductByRelatedClassesName(db, classes, name):
         products = db.session.query(Product).join(Product.colors).join(
             Product.categories).join(Product.sizes).options(

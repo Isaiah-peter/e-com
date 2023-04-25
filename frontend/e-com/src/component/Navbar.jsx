@@ -73,7 +73,7 @@ const MenuItem = styled.div`
   ${mobile({ fontSize: "12px", marginLeft: "10px" })}
 `;
 
-const Navbar = () => {
+const Navbar = ({user}) => {
   const quantity = useSelector((state) => state.cart.quantity);
 
   return (
@@ -88,10 +88,22 @@ const Navbar = () => {
         </Left>
         <Center>Shoppy.</Center>
         <Right>
-          <Link to={"/register"} style={{ color: "#213547", textDecoration: "none" }}>
-            <MenuItem>Register</MenuItem>
-          </Link>
-          <MenuItem>SignOut</MenuItem>
+          {user ?
+            (<>
+              <Link to={"/register"} style={{ color: "#213547", textDecoration: "none" }}>
+                <MenuItem>Register</MenuItem>
+              </Link>
+              <Link to={"/login"} style={{ color: "#213547", textDecoration: "none" }}>
+                <MenuItem>Login</MenuItem>
+              </Link>
+            </>) : 
+            (
+              <>
+                <MenuItem>SignOut</MenuItem>
+              </>
+            )
+            
+          }
           <Link to="/cart" style={{ color: "inherit" }}>
             <MenuItem>
               <Badge color="primary" badgeContent={quantity}>

@@ -3,6 +3,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_migrate import Migrate
 import cloudinary
+from flask_cors import CORS
+
 
 
 cloudinary.config(
@@ -12,6 +14,8 @@ cloudinary.config(
     secure = True
 )
 app = Flask(__name__)
+
+CORS(app)
 app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://postgres:secret@localhost:5432/ecom"
 app.config["secret_key"] = "qwertyuiopasdfghjkl"
 db = SQLAlchemy()

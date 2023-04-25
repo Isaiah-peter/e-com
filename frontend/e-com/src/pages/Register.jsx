@@ -2,7 +2,8 @@ import { RemoveRedEyeOutlined, VisibilityOff } from "@material-ui/icons";
 import React, { useState } from "react";
 import styled from "styled-components";
 import "./login.css"
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
+import axios from "axios";
 
 const Container = styled.div`
   width: 100vw;
@@ -70,7 +71,7 @@ const Button = styled.button`
 const Icon = styled.div`
   position: absolute;
   right: 2%;
-  top: 20%;
+  top: 32%;
 `;
 
 const SellerDiv = styled.div`
@@ -93,9 +94,11 @@ const Register = () => {
     email: "",
     password: "",
     phone: "",
-    address: "",
+    profile: 'https://static.vecteezy.com/system/resources/previews/000/439/863/original/vector-users-icon.jpg',
+    seller: false
   })
 
+  const history = useHistory()
 
   const handleCheck = () => {
     setCheck(!check)
@@ -105,9 +108,19 @@ const Register = () => {
     setUser({...user, [e.target.name]: e.target.value})
   }
 
-  console.log(check)
+  const handleSubmit = async(e) => {
+    e.preventDefault()
+    let registerduser = {...user, 'is_seller': check}
 
-  console.log(user)
+    try {
+      await axios.post('http://Localhost:5000/register', registerduser)
+      history.push('/login')
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+
   return (
     <Container>
       <Wrapper>
@@ -127,7 +140,7 @@ const Register = () => {
         >
           Login
         </Link>
-        <Form>
+        <Form onSubmit={handleSubmit}>
           <Input placeholder="username" name="username" onChange={(e) => handleChange(e)} />
           <Input placeholder="name" name="name" onChange={(e) => handleChange(e)} />
           <Input
@@ -153,9 +166,9 @@ const Register = () => {
             By Creating ths account mean that you consent to follow the{" "}
             <b>Private Policy</b>
           </Agreement>
-          <Button>
+          <Button type="submit" >
             Create
-          </Button>
+          </Button >
         </Form>
       </Wrapper>
     </Container>

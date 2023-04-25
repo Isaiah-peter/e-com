@@ -38,15 +38,15 @@ const Container = styled.div`
   }
 `;
 const Circle = styled.div`
-  width: 200px;
-  height: 200px;
+  width: 300px;
+  height: 300px;
   border-radius: 50%;
   background-color: #fff;
   position: absolute;
 `;
 const Image = styled.img`
   height: 75%;
-  width: 50%;
+  width: 90%;
   object-fit: cover;
   z-index: 2;
 `;
@@ -73,7 +73,7 @@ const ProductItem = ({ item }) => {
   return (
     <Container>
       <Circle />
-      <Image src={item.image_url} className="img-fluid" />
+      <Image src={item.url} className="img-fluid" />
       <Info>
         <Icon>
           <ShoppingCartOutlined />

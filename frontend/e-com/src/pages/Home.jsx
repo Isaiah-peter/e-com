@@ -8,11 +8,11 @@ import Categories from "../component/Categories";
 import { Link } from "react-router-dom";
 import './style.css'
 
-const Home = ({user}) => {
+const Home = ({user, login}) => {
     return (
         <div className="position-relative">
             <Announcement />
-            <Navbar user={user} />
+            <Navbar user={login} />
             <Slider />
             <Categories />
             <Product />

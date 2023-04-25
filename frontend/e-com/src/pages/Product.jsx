@@ -8,7 +8,8 @@ import Navbar from "../component/Navbar";
 import NewLetter from "../component/NewLetter";
 import { addProduct } from "../redux/cartRedux";
 import { useDispatch, useSelector } from "react-redux";
-import {popularProduct} from "../data"
+import { popularProduct } from "../data"
+import axios from "axios";
 
 const Container = styled.div``;
 const Wrapper = styled.div`
@@ -122,16 +123,20 @@ const Product = () => {
   const [size, setSize] = useState("");
   const dispatch = useDispatch();
 
-  const { token } = useSelector((state) => state.user.currentUser);
+  const { auth_token } = useSelector((state) => state.user.currentUser);
 
   useEffect(() => {
     const getProduct = async () => {
-      for (let i of popularProduct) {
-        if (i.id == id) {
-          console.log(i)
-          setProduct(i)
-          return
-        }
+      try {
+        const res = await axios.get(`http://Localhost:5000/product/${id}`, {
+          headers: {
+            Authorization: `Bearer ${auth_token}`,
+          },
+        });
+        console.log(res.data.Product[0])
+        setProduct(res.data.Product[0]);
+      } catch (error) {
+        console.log(error);
       }
     };
     getProduct();
@@ -149,8 +154,6 @@ const Product = () => {
     }
   };
 
-  console.log(size, color);
-
   return (
     <Container>
       <Navbar />
@@ -158,17 +161,17 @@ const Product = () => {
       {product.length !== 0 && (
         <Wrapper>
           <ImageContainer>
-            <Image src={product.image_url} />
+            <Image src={product.url} />
           </ImageContainer>
           <InfoContainer>
-            <Title>{product.title}</Title>
+            <Title>{product.longname}</Title>
             <Desc>{product.description}</Desc>
             <Price>$ {product.price}</Price>
             <FilterContainer>
               {product.length !== 0 && (
                 <Filter>
                   <FilterTitle>Color</FilterTitle>
-                  {product.Color?.map((c) => (
+                  {product.color?.map((c) => (
                     <FilterColor
                       color={c.name}
                       onClick={() => setColor(c.name)}
@@ -180,7 +183,7 @@ const Product = () => {
                 <FilterTitle>Size</FilterTitle>
                 {product.length !== 0 && (
                   <FilterSize onChange={(e) => setSize(e.target.value)}>
-                    {product.Size?.map((s) => (
+                    {product.size?.map((s) => (
                       <FilterSizeOption>{s.name}</FilterSizeOption>
                     ))}
                   </FilterSize>
