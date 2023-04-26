@@ -1,6 +1,7 @@
-import { loginFailure, loginStart, loginSuccess } from "./userSlice";
+import { loginFailure, loginStart, loginSuccess, logoutSuccess } from "./userSlice";
 import {addProduct, removeProduct} from "./cartRedux"
 import axios from "axios";
+import storage from "redux-persist/lib/storage";
 
 export const login = async (dispatch, user) => {
   dispatch(loginStart());

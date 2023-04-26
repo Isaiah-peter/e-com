@@ -37,6 +37,7 @@ class ProductQty(db.Model, BaseModel):
     quantity = db.Column(db.Integer, nullable=False)
     color = db.Column(db.String, nullable=False)
     size = db.Column(db.String, nullable=False)
+    price = db.Column(db.Float, nullable=False)
     ordered = db.Column(db.Boolean, nullable=False, default=False)
     product_id = db.Column(db.Integer, db.ForeignKey('products.id'),
                            nullable=False)
@@ -48,6 +49,8 @@ class ProductQty(db.Model, BaseModel):
             "id": self.id,
             "quantity": self.quantity,
             "ordered": self.ordered,
+            "product_id": self.product_id,
             "color": self.color,
-            "size": self.size
+            "size": self.size,
+            "price": self.price
         }

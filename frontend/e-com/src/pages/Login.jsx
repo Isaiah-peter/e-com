@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { RemoveRedEyeOutlined, VisibilityOff } from "@material-ui/icons";
 import { login } from "../redux/aipCall";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom"
+import { Link , useHistory} from "react-router-dom"
 import "./login.css"
 
 const Container = styled.div`
@@ -83,10 +83,12 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const { isFetching, currentUser } = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const handleClick = (e) => {
     e.preventDefault();
     login(dispatch, { email, password });
+    history.push('/')
   };
 
   return (

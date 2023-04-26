@@ -2,6 +2,9 @@ import React, { useRef, useState } from 'react'
 
 const CreateProduct = () => {
   const [image, setImage] = useState('')
+  const [product, setProduct] = useState({
+    name: 
+  })
 
   const onChange = (e) => {
     e.preventDefault();

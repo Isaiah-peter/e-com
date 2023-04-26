@@ -122,6 +122,14 @@ const Product = () => {
   const [color, setColor] = useState("");
   const [size, setSize] = useState("");
   const dispatch = useDispatch();
+  const [productQty, setProductQty] = useState({
+    "quantity": 0,
+    "ordered": false,
+    "color": '',
+    "product_id": 0,
+    "size": '',
+    "price": 0
+  })
 
   const { auth_token } = useSelector((state) => state.user.currentUser);
 
@@ -143,7 +151,7 @@ const Product = () => {
   }, [id]);
 
   const handleCart = () => {
-    dispatch(addProduct({ ...product, quantity, color, size }));
+    dispatch(addProduct({ productQty, quantity, color, size }));
   };
 
   const handleQuantity = (condition) => {
@@ -152,6 +160,7 @@ const Product = () => {
     } else {
       setQuantity(quantity + 1);
     }
+    setProductQty({...productQty,price: product.price, product_id: product.id, color, size,  quantity})
   };
 
   return (
@@ -174,7 +183,10 @@ const Product = () => {
                   {product.color?.map((c) => (
                     <FilterColor
                       color={c.name}
-                      onClick={() => setColor(c.name)}
+                      onClick={() => {
+                        setColor(c.name)
+                        setProductQty({...productQty, price: product.price, product_id: product.id, color, size,  quantity})
+                      }}
                     />
                   ))}
                 </Filter>
@@ -182,7 +194,10 @@ const Product = () => {
               <Filter>
                 <FilterTitle>Size</FilterTitle>
                 {product.length !== 0 && (
-                  <FilterSize onChange={(e) => setSize(e.target.value)}>
+                  <FilterSize onChange={(e) => {
+                    setSize(e.target.value)
+                    setProductQty({...productQty, price: product.price, product_id: product.id, color, size,  quantity})
+                  }}>
                     {product.size?.map((s) => (
                       <FilterSizeOption>{s.name}</FilterSizeOption>
                     ))}

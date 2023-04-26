@@ -157,7 +157,7 @@ def upload():
     return jsonify(upload_image), 200
 
 
-@app.route('/product/<seller_id>', methods=['GET'])
+@app.route('/products/<seller_id>', methods=['GET'])
 def seller_product(seller_id):
     auth_header = request.headers.get("Authorization")
     if auth_header is None:
@@ -165,7 +165,8 @@ def seller_product(seller_id):
     else:
         auth_token = auth_header.split(' ')[1]
     user = User.decode_auth_token(auth_token)
-    if type(user) == dict and user.get('seller_id'):
+    print(user)
+    if type(user) == dict and user.get('seller'):
         product = Product.getProductBySeller_id(db, seller_id)
         if len(product.get("Product")) == 0:
             return {"error": "no product"}, 400

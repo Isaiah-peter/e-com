@@ -20,46 +20,76 @@ import {
 
 function App() {
   const user = useSelector((state) => state.user.currentUser);
-  const seller = user.user.is_seller
+  let seller = false;
+
+  const emptyUser = Object.keys(user).length === 0;
+
+  console.log(emptyUser)
+
+  if (user.user) {
+    seller = user.user.is_seller
+  }
   return (
     <Router>
       <Switch>
-      <Route exact path="/">
-          <Home user={seller} login={user} />
+        <Route exact path="/">
+          <Home user={seller} login={emptyUser} />
         </Route>
 
-        <Route path="/products/:category">
-          <ProductList />
-        </Route>
-        <Route path="/product/:id">
-          <Product />
-        </Route>
-        <Route path="/register">
-          {user ? <Redirect to="/" /> : <Register />}
-        </Route>
-        <Route path="/login">{user ? <Redirect to="/" /> : <Login />}</Route>
-        <Route path="/cart">
-          <Cart />
-        </Route>
-
-        <MainDashBroad>
+        
+        {emptyUser == false && (
           <Route
             path="/dashboard"
               render={({ match: { url } }) => {
                 console.log(url)
                 return (
-                  <>
+                  <MainDashBroad>
                     <Route path={`${url}/`} component={Dashbroad} exact />
                     <Route path={`${url}/orders`} component={Order} />
                     <Route path={`${url}/products`} component={ListSellerProduct} />
                     <Route path={`${url}/createproduct`} component={CreateProduct} />
                     <Route path={`${url}/categories`} component={SellerCategories} />
-                  </>
+                  </MainDashBroad>
                 )
               }
             }
           />
-        </MainDashBroad>
+        )}
+
+        {emptyUser == false && (
+          <>
+            <Route path="/products/:category">
+              <ProductList />
+            </Route>
+            <Route path="/product/:id">
+              <Product />
+            </Route>
+            <Route path="/cart">
+              <Cart />
+            </Route>
+          </>
+        )}
+
+        {
+          emptyUser ? 
+            (
+              <Route path="/register">
+                <Register />
+              </Route>
+            ) : (
+              <Redirect to="/" />
+            )
+        }
+        {
+          emptyUser ? (
+            <Route path="/login">
+              <Login />
+            </Route>
+          ) :
+            (
+              <Redirect to="/" />
+            )
+        }
       </Switch>
     </Router>
   );

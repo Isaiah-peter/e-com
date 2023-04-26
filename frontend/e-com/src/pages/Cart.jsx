@@ -4,10 +4,10 @@ import Navbar from "../component/Navbar";
 import Announcement from "../component/Announcement";
 import Footer from "../component/Footer";
 import {removeProduct} from "../redux/cartRedux"
-import { Add, Remove } from "@material-ui/icons";
 import { useSelector, useDispatch } from "react-redux";
 import { PaystackConsumer } from "react-paystack";
 import { Link } from "react-router-dom";
+import Cartitem from "./Cartitem";
 
 const KEY = import.meta.env.VITE_APP_PAYSTACK;
 console.log(KEY)
@@ -56,64 +56,6 @@ const Bottom = styled.div`
 
 const Info = styled.div`
   flex: 3;
-`;
-
-const Product = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin: 20px 0;
-`;
-const ProductDetail = styled.div`
-  flex: 2;
-  display: flex;
-`;
-
-const Image = styled.img`
-  width: 200px;
-  height: 200px;
-  object-fit: cover;
-`;
-
-const Detail = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  padding: 20px;
-`;
-
-const ProductName = styled.span``;
-
-const ProductColor = styled.div`
-  height: 20px;
-  width: 20px;
-  border-radius: 50%;
-  background-color: ${(props) => props.color};
-`;
-
-const ProductSize = styled.span``;
-
-const PriceDetail = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-`;
-
-const ProductAmountContainer = styled.div`
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
-`;
-
-const ProductAmount = styled.span`
-  font-size: 24px;
-  margin: 5px;
-`;
-
-const ProductPrice = styled.span`
-  font-size: 30px;
-  font-weight: 200;
 `;
 
 const Hr = styled.hr`
@@ -200,29 +142,7 @@ const Cart = () => {
           <Info>
             {cart.products.map((p) => (
               <>
-                <Product>
-                  <ProductDetail>
-                    <Image src={p.url} />
-                    <Detail>
-                      <ProductName>
-                        <b>Product:</b> {p.name}
-                      </ProductName>
-                      <ProductColor color={p.color} />
-                      <ProductSize>
-                        <b>Product Size:</b> {p.size}
-                      </ProductSize>
-                    </Detail>
-                  </ProductDetail>
-                  <PriceDetail>
-                    <ProductAmountContainer>
-                      <Remove />
-                      <ProductAmount>{p.quantity}</ProductAmount>
-                      <Add />
-                    </ProductAmountContainer>
-                    <ProductPrice>$ {p.price * p.quantity}</ProductPrice>
-                  </PriceDetail>
-                </Product>
-                <Hr />
+                <Cartitem p={p} />
               </>
             ))}
           </Info>

@@ -3,8 +3,11 @@ import styled from "styled-components";
 import { Search, ShoppingCartOutlined } from "@material-ui/icons";
 import { Badge } from "@material-ui/core";
 import { mobile } from "../Responsive";
-import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { Link, useHistory } from "react-router-dom";
+import { logoutSuccess } from "../redux/userSlice";
+import Brand from "../asset/E-COM.svg"
+
 
 const Container = styled.div`
   height: 60px;
@@ -75,6 +78,14 @@ const MenuItem = styled.div`
 
 const Navbar = ({user}) => {
   const quantity = useSelector((state) => state.cart.quantity);
+  const dispatch = useDispatch()
+  const history = useHistory()
+
+  const signout = () => {
+    console.log("signout")
+    dispatch(logoutSuccess())
+    history.push('/login')
+  }
 
   return (
     <Container>
@@ -86,9 +97,15 @@ const Navbar = ({user}) => {
             <Search style={{ color: "gray", fontSize: 16 }} />
           </SearchContainer>
         </Left>
-        <Center>Shoppy.</Center>
+        <Center><img src={Brand} className="img-fluid" width={200} /></Center>
         <Right>
-          {user ?
+          {!user ?
+            (
+              <>
+                <MenuItem onClick={signout}>SignOut</MenuItem>
+              </>
+            )
+             : 
             (<>
               <Link to={"/register"} style={{ color: "#213547", textDecoration: "none" }}>
                 <MenuItem>Register</MenuItem>
@@ -96,12 +113,7 @@ const Navbar = ({user}) => {
               <Link to={"/login"} style={{ color: "#213547", textDecoration: "none" }}>
                 <MenuItem>Login</MenuItem>
               </Link>
-            </>) : 
-            (
-              <>
-                <MenuItem>SignOut</MenuItem>
-              </>
-            )
+            </>)
             
           }
           <Link to="/cart" style={{ color: "inherit" }}>
