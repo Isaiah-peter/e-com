@@ -1,10 +1,48 @@
-import React, { useRef, useState } from 'react'
+import React, { useState } from 'react'
+import { useSelector } from 'react-redux';
+import axios from 'axios';
 
 const CreateProduct = () => {
   const [image, setImage] = useState('')
+  const [file, setFile] = useState('')
+  const [cat, setCat] = useState([]);
+  const [size, setSize] = useState([]);
+  const [color, setColor] = useState([]);
   const [product, setProduct] = useState({
-    name: 
-  })
+    name: '',
+    longname: '',
+    desc: '',
+    imageurl: '',
+    price: 0,
+    in_stock: 0,
+  });
+
+  const { auth_token } = useSelector((state) => state.user.currentUser);
+
+  const handleCat = (e) => {
+    setCat(
+      e.target.value.split(",").map((value) => {
+        return { name: value };
+      })
+    );
+  };
+
+  const handleColor = (e) => {
+    setColor(
+      e.target.value.split(",").map((value) => {
+        return { name: value };
+      })
+    );
+  };
+
+  const handleSize = (e) => {
+    setSize(
+      e.target.value.split(",").map((value) => {
+        return { name: value.toUpperCase() };
+      })
+    );
+  };
+
 
   const onChange = (e) => {
     e.preventDefault();
@@ -14,12 +52,59 @@ const CreateProduct = () => {
     } else if (e.target) {
       files = e.target.files;
     }
+
+    const fileimage = files[0]
+    setFile(fileimage)
     const reader = new FileReader();
     reader.onload = () => {
       setImage(reader.result);
     };
     reader.readAsDataURL(files[0]);
   };
+
+  console.log(file)
+
+  const getImageUrl = async (e) => {
+    e.preventDefault()
+    const formData = new FormData();
+    formData.append('imageurl', file)
+    const res = await axios.post('http://localhost:5000/upload', formData, {
+      headers: {
+        Authorization: `Bearer ${auth_token}`,
+      },
+    })
+    if (res.data) {
+      setProduct({
+        ...product,
+        imageurl: res.data.secure_url,
+      })
+    }
+  }
+
+  const handleChange = (e) => {
+    e.preventDefault();
+    setProduct({...product, [e.target.name]: e.target.value})
+  }
+  console.log({ ...product, cat, color, size })
+
+  const createProduct = async () => {
+    const data = { ...product, "categories":cat, "colors":color, "sizes":size }
+    try {
+      await axios.post("http://localhost:5000/product", data, {
+        headers: {
+          Authorization: `Bearer ${auth_token}`,
+        },
+      })
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    createProduct()
+  };
+
     
   return (
     <div className="body d-flex py-3 ">
@@ -28,7 +113,7 @@ const CreateProduct = () => {
           <div className="border-0 w-100 mb-4">
             <div className="w-100 card-header py-3 no-bg bg-transparent d-flex align-items-center px-0 justify-content-between border-bottom flex-wrap">
               <h3 className="fw-bold mb-0">Products Add</h3>
-              <button type="submit" className="btn btn-primary btn-set-task w-sm-100 text-uppercase px-5">Save</button>
+              <button type="submit" onClick={handleSubmit} className="btn btn-primary btn-set-task w-sm-100 text-uppercase px-5">Save</button>
             </div>
           </div>
         </div>
@@ -42,7 +127,7 @@ const CreateProduct = () => {
                   <div class="row g-3 align-items-center">
                     <div class="col-md-12">
                       <label class="form-label">Product Price</label>
-                      <input type="text" class="form-control" placeholder='1200'/>
+                      <input type="number" class="form-control" name='price' placeholder='1200' onChange={handleChange}/>
                     </div>
                   </div>
                 </div>
@@ -55,7 +140,7 @@ const CreateProduct = () => {
                   <div className="row g-3 align-items-center">
                     <div className="col-md-12">
                       <label className="form-label">Product categories</label>
-                      <input type="text" className="form-control" placeholder='women, man' />
+                      <input type="text" className="form-control" onChange={handleCat} placeholder='women, man' />
                     </div>
                   </div>
                 </div>
@@ -68,7 +153,21 @@ const CreateProduct = () => {
                   <div className="row g-3 align-items-center">
                     <div className="col-md-12">
                       <label className="form-label">Product Sizes</label>
-                      <input type="text" className="form-control" placeholder='12, 23, 56' />
+                      <input type="text" className="form-control" onChange={handleSize} placeholder='12, 23, 56' />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="card mb-3">
+                <div className="card-header py-3 d-flex justify-content-between align-items-center bg-transparent border-bottom-0">
+                  <h6 className="m-0 fw-bold">Color</h6>
+                </div>
+                <div className="card-body">
+                  <div className="row g-3 align-items-center">
+                    <div className="col-md-12">
+                      <label className="form-label">Product Color</label>
+                      <input type="text" className="form-control" onChange={handleColor} placeholder='yellow, black' />
                     </div>
                   </div>
                 </div>
@@ -85,15 +184,19 @@ const CreateProduct = () => {
                   <div class="row g-3 align-items-center">
                     <div class="col-md-6">
                       <label class="form-label">Name</label>
-                      <input type="text" class="form-control" placeholder="Nike shoe" />
+                      <input type="text" class="form-control" name='name' placeholder="Nike shoe" onChange={handleChange} />
                     </div>
                     <div class="col-md-6">
                       <label class="form-label">Longname</label>
-                      <input type="text" class="form-control" placeholder='longname' />
+                      <input type="text" class="form-control" name='longname' placeholder='longname' onChange={handleChange} />
+                    </div>
+                    <div class="col-md-6 mt-3">
+                      <label class="form-label">In Stock</label>
+                      <input type='number' class="form-control" name='in_stock' placeholder="23" onChange={handleChange} />
                     </div>
                     <div class="col-md-12 mt-4">
                       <label class="form-label">Product Description</label>
-                      <textarea class="form-control" />
+                      <textarea class="form-control" name='desc' onChange={handleChange} />
                     </div>
                   </div>
                 </form>
@@ -107,7 +210,7 @@ const CreateProduct = () => {
                 }
                 <input type="file" className='form-control' onChange={onChange} />
                 {
-                  image && (<button className="btn btn-primary btn-set-task w-50 text-uppercase px-5 mt-3">Save</button>)
+                  image && (<button className="btn btn-primary btn-set-task w-50 text-uppercase px-5 mt-3" onClick={getImageUrl}>Save</button>)
                 }
               </div>
             </div>

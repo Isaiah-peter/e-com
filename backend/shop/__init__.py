@@ -15,7 +15,7 @@ cloudinary.config(
 )
 app = Flask(__name__)
 
-CORS(app)
+cors = CORS(app)
 app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://postgres:secret@localhost:5432/ecom"
 app.config["secret_key"] = "qwertyuiopasdfghjkl"
 db = SQLAlchemy()

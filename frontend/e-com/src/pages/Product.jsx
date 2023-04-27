@@ -141,7 +141,6 @@ const Product = () => {
             Authorization: `Bearer ${auth_token}`,
           },
         });
-        console.log(res.data.Product[0])
         setProduct(res.data.Product[0]);
       } catch (error) {
         console.log(error);
@@ -149,6 +148,7 @@ const Product = () => {
     };
     getProduct();
   }, [id]);
+
 
   const handleCart = () => {
     dispatch(addProduct({ productQty, quantity, color, size }));

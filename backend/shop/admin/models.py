@@ -71,7 +71,7 @@ class User(db.Model, BaseModel):
         auth_token = auth_header.split(' ')[1]
 
         user = self.decode_auth_token(auth_token=auth_token)
-        if user.is_seller == False:
+        if user.get('seller') == False:
             return False
         return True
 

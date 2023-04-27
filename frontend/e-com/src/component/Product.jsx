@@ -49,7 +49,7 @@ const Product = ({cat, filter, sort}) => {
     getProduct();
   }, [cat]);
 
-  console.log(products.Product)
+  console.log(products)
 
   useEffect(() => {
     cat &&

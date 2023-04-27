@@ -8,20 +8,36 @@ import cloudinary.uploader
 
 @app.route('/category', methods=['GET', 'POST'])
 def category():
-    if User.auth(request):
-        if request.is_json:
-            data = request.get_json()
-            newcat = Category(name=data['name'])
-            newcat.product_id = data['product_id']
+    if User.auth(User, request):
+        if request.method == 'POST':
+            if request.is_json:
+                data = request.get_json()
+                newcat = Category(name=data['name'])
+                newcat.product_id = data['product_id']
 
-            db.session.add(newcat)
-            db.session.commit(newcat)
+                db.session.add(newcat)
+                db.session.commit(newcat)
 
-            return make_response(jsonify(newcat.to_dict())), 200
-        else:
-            return {"error": "please input data"}, 404
+                return make_response(jsonify(newcat.to_dict())), 200
+            else:
+                return {"error": "please input data"}, 404
+            
+        if request.method == 'GET':
+            category = db.engine.execute('SELECT DISTINCT name FROM categories ORDER BY name')
+            res = []
+            num = 1
+            for i in category.all():
+                resdict = {}
+                resdict['id'] = num
+                resdict['name'] = i[0]
+
+                res.append(resdict)
+
+            return make_response(jsonify(res)), 200
+                
     else:
         return {"error": "you are not authorized to create this"}, 401
+    
 
 
 @app.route('/product', methods=['POST'])
@@ -33,14 +49,14 @@ def product_create():
 
     if auth_token:
         user = User.decode_auth_token(auth_token=auth_token)
-        if type(user) != dict and user.seller:
+        if type(user) != dict and user.get('seller'):
             return {"error": "Invalid token or Unauthorize user"}, 401
 
         if request.is_json:
             data = request.get_json()
             product = Product(name=data.get('name'), desc=data.get('desc'),
-                              price=data.get('price'),
-                              in_stock=data.get('in_stock'),
+                              price=float(data.get('price')),
+                              in_stock=int(data.get('in_stock')),
                               imageurl=data.get('imageurl'),
                               seller_id=user.get("user_id"),
                               longname=data.get('longname'))
@@ -67,18 +83,7 @@ def product_create():
             user = User.query.filter_by(id=user.get("user_id")).first()
             print(user)
 
-            res = {
-                "id": product.id,
-                "name": product.name,
-                "longname": product.longname,
-                "imageurl": product.imageurl,
-                "price": product.price,
-                "in_stock": product.in_stock,
-                "seller_name": user.name,
-                "seller_imageurl": user.profile,
-
-            }
-            return make_response(jsonify(res)), 200
+            return make_response(jsonify({"msg": "sucessfully created"})), 200
         else:
             return {"error": "please add data"}
 
@@ -150,6 +155,7 @@ def getProductById(id):
 @app.route('/upload', methods=['POST'])
 def upload():
     file_to_upload = request.files['imageurl']
+    print(file_to_upload)
     app.logger.info('%s file_to_upload', file_to_upload)
     upload_image = cloudinary.uploader.upload(file_to_upload)
     print(upload_image)
@@ -160,6 +166,7 @@ def upload():
 @app.route('/products/<seller_id>', methods=['GET'])
 def seller_product(seller_id):
     auth_header = request.headers.get("Authorization")
+
     if auth_header is None:
         return {"error": "no token"}, 400
     else:

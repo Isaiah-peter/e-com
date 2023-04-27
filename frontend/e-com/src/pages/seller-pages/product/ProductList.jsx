@@ -7,7 +7,7 @@ const ProductList = () => {
   const { user, auth_token } = useSelector((state) => state.user.currentUser);
   const [products, setProducts] = useState([])
 
-  console.log(user)
+  console.log(user.id)
   useEffect(() => {
     const getProduct = async () => {
       try {
@@ -23,6 +23,8 @@ const ProductList = () => {
     };
     getProduct();
   }, [])
+
+  console.log(products)
 
 
   return (

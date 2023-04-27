@@ -1,8 +1,10 @@
 import React from 'react'
 import "./header.css"
 import user_imge from "../../asset/user.svg"
+import {useSelector } from "react-redux";
 
 const Header = () => {
+  const { user } = useSelector((state) => state.user.currentUser);
   return (
     <div className='header'>
       <nav class="navbar py-4">
@@ -11,12 +13,12 @@ const Header = () => {
             <div class=" dropdown user-profilem ml-2 ml-sm-3 d-flex align-items-center zindex-popover dropdown">
               <div class="u-info me-2">
                 <p class="mb-0 text-end line-height-sm ">
-                  <span class="font-weight-bold">John Quinn</span>
+                  <span class="font-weight-bold">{user.name}</span>
                 </p>
                 <small>Seller Profile</small>
               </div>
               <a class="nav-link pulse p-0 mb-3" id="react-aria1271382322-3" aria-expanded="false" href="#!" role="button">
-                <img class="avatar lg rounded-circle img-thumbnail" src={user_imge} alt="profile" />
+                <img class="avatar lg rounded-circle img-thumbnail" src={user.profile} alt="profile" />
               </a>
             </div>
             <div class="setting ms-2">
